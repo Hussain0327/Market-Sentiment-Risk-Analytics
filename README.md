@@ -94,7 +94,28 @@ python -c "from config import Config; print(Config.PROJECT_ROOT)"
 python -c "from src import data, sentiment, risk, features, ml, db"
 ```
 
-### 4. Run Dashboard (coming soon)
+### 4. Run Sentiment Analysis
+
+```python
+from src.sentiment import VaderAnalyzer, SentimentAggregator
+import pandas as pd
+
+# Load news data
+news = pd.read_csv('data/raw/AAPL_news.csv')
+
+# Analyze sentiment
+analyzer = VaderAnalyzer()
+sentiment = analyzer.analyze_batch(news, text_column='headline')
+
+# Aggregate to daily signals
+agg = SentimentAggregator()
+daily = agg.aggregate_daily(sentiment)
+signals = agg.generate_signals(daily, method='zscore')
+
+print(signals[['symbol', 'date', 'sentiment_score', 'signal']])
+```
+
+### 5. Run Dashboard (coming soon)
 
 ```bash
 streamlit run dashboard/app.py
@@ -114,7 +135,20 @@ Key settings in `config.py`:
 
 ## Development Status
 
-See [docs/README.md](docs/README.md) for current implementation progress.
+**Current Progress: 50% Complete (Phases 1-3 of 8)**
+
+| Phase | Status | Description |
+|-------|--------|-------------|
+| 1. Foundation | ✅ Complete | Project structure, config, dependencies |
+| 2. Data Collection | ✅ Complete | 1,731 news articles + 1yr prices for 7 symbols |
+| 3. Sentiment Analysis | ✅ Complete | FinBERT + VADER analyzers, daily aggregation |
+| 4. Risk Metrics | 🔜 Next | VaR, volatility forecasting, drawdown |
+| 5. Feature Engineering | ⏳ Planned | Price, sentiment, risk features |
+| 6. ML Models | ⏳ Planned | XGBoost signal classification |
+| 7. Database | ⏳ Planned | SQLite persistence |
+| 8. Dashboard | ⏳ Planned | Streamlit visualization |
+
+See [docs/README.md](docs/README.md) for detailed implementation progress.
 
 ## License
 
