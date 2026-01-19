@@ -2,9 +2,9 @@
 
 This document tracks the implementation status of the Market Sentiment & Risk Analytics Engine.
 
-## Current Status: Sentiment Analysis Complete
+## Current Status: Feature Engineering Complete
 
-**Last Updated:** January 18, 2026
+**Last Updated:** January 19, 2026
 
 ---
 
@@ -87,7 +87,7 @@ data/raw/
 | `src/sentiment/vader_fallback.py` | ✅ | VADER with 78 financial domain terms |
 | `src/sentiment/aggregator.py` | ✅ | Time-weighted aggregation & signal generation |
 | `src/sentiment/__init__.py` | ✅ | Module exports |
-| `tests/test_sentiment.py` | ✅ | 37 tests passing |
+| `tests/test_sentiment.py` | ✅ | 39 tests passing |
 
 ### Features Implemented
 
@@ -110,18 +110,6 @@ data/raw/
 - Signal validity checks (min articles, confidence threshold)
 - Sentiment momentum calculation
 
-### Sentiment Results
-
-| Symbol | Avg Sentiment | Total Articles | Bullish % | Bearish % |
-|--------|---------------|----------------|-----------|-----------|
-| NVDA | +0.210 | 249 | 53.1% | 14.4% |
-| AAPL | +0.203 | 247 | 52.5% | 14.4% |
-| GOOGL | +0.189 | 248 | 50.3% | 14.9% |
-| MSFT | +0.165 | 244 | 47.6% | 16.3% |
-| AMZN | +0.104 | 246 | 48.8% | 28.1% |
-| TSLA | +0.067 | 250 | 35.6% | 22.7% |
-| META | +0.054 | 247 | 39.5% | 29.9% |
-
 ### Output Files
 
 ```
@@ -131,109 +119,137 @@ data/processed/
 └── sentiment_signals.csv   # 7.3 KB - Trading signals with z-scores
 ```
 
+---
+
+## Phase 4: Risk Metrics ✅
+
+### Completed Tasks
+
+| File | Lines | Description |
+|------|-------|-------------|
+| `src/risk/var.py` | 433 | VaR (Historical, Parametric, Monte Carlo) + Expected Shortfall |
+| `src/risk/volatility.py` | 464 | Realized vol, EWMA, Parkinson, GARCH(1,1) forecasting |
+| `src/risk/drawdown.py` | 500 | Drawdown analysis, recovery time, Calmar ratio, Ulcer index |
+| `src/risk/risk_report.py` | 290 | Consolidated reporting, cross-symbol comparison |
+| `tests/test_risk.py` | 600+ | 46 tests passing |
+
+### Features Implemented
+
+**VaRCalculator:**
+- Historical VaR (percentile-based)
+- Parametric VaR (Gaussian assumption)
+- Monte Carlo VaR (simulation-based)
+- Expected Shortfall (CVaR)
+- Rolling VaR with configurable windows
+- VaR backtesting with Kupiec test
+
+**VolatilityForecaster:**
+- Realized volatility (rolling std)
+- EWMA volatility (exponentially weighted)
+- Parkinson volatility (high-low range)
+- GARCH(1,1) forecasting with arch library
+- Volatility regime classification (low/medium/high)
+- Volatility cone and term structure analysis
+
+**DrawdownAnalyzer:**
+- Real-time drawdown tracking
+- Maximum drawdown calculation
+- Drawdown duration analysis
+- Recovery time estimation
+- Underwater period detection
+- Calmar ratio and Ulcer index
+
+**RiskReport:**
+- Consolidated risk metrics for any symbol
+- Cross-symbol comparison
+- Risk ranking by multiple metrics
+- Export to CSV/JSON
+
+### Sample Output (AAPL)
+
+```
+95% VaR: 3.17% daily
+99% VaR: 4.92% daily
+Expected Shortfall (95%): 4.21%
+Max Drawdown: 30.22%
+21-day Volatility: 10.57% (annualized)
+GARCH Persistence: 0.976
+```
+
+---
+
+## Phase 5: Feature Engineering ✅
+
+### Completed Tasks
+
+| File | Lines | Description |
+|------|-------|-------------|
+| `src/features/price_features.py` | 618 | Returns, RSI, MACD, Stochastic, Bollinger, ATR, volume |
+| `src/features/sentiment_features.py` | 523 | Lags, momentum, z-scores, disagreement, article counts |
+| `src/features/risk_features.py` | 531 | Rolling VaR, vol regimes, drawdown, GARCH, tail risk |
+| `src/features/builder.py` | 533 | Pipeline orchestration, alignment, target creation |
+| `tests/test_features.py` | 863 | 69 tests passing |
+
+### Features Implemented
+
+**PriceFeatureBuilder (47 features):**
+- Multi-period returns (1d, 5d, 21d) and log returns
+- RSI, MACD, Stochastic oscillator
+- Bollinger Bands (%B, bandwidth)
+- Moving averages (SMA, EMA) and crossover signals
+- ATR (Average True Range)
+- Volume features (OBV, volume ratio, momentum)
+- Price momentum at multiple windows
+
+**SentimentFeatureBuilder (30+ features):**
+- Lagged sentiment scores (1-7 day lags)
+- Sentiment momentum and acceleration
+- Rolling z-scores and percentile ranks
+- Sentiment disagreement (uncertainty proxy)
+- Article count features (news volume/buzz)
+- Confidence-weighted sentiment
+- Bullish/bearish/neutral signal indicators
+
+**RiskFeatureBuilder (40+ features):**
+- Rolling VaR at 95% and 99% confidence
+- Rolling Expected Shortfall
+- Realized and EWMA volatility at multiple windows
+- Volatility ratios (term structure)
+- Volatility regime indicators (one-hot encoded)
+- Drawdown features (current DD, days since peak)
+- GARCH conditional volatility and forecasts
+- Tail risk (skewness, kurtosis, tail ratio)
+- Risk-adjusted returns (Sharpe, Sortino, Calmar)
+
+**FeatureBuilder Pipeline:**
+- Combines price, sentiment, and risk features
+- Handles date alignment across data sources
+- Creates ML-ready targets (return, direction)
+- Saves/loads feature sets
+- Feature summary statistics
+
 ### Usage Example
 
 ```python
-from src.sentiment import VaderAnalyzer, FinBertAnalyzer, SentimentAggregator
+from src.features import FeatureBuilder
 import pandas as pd
 
-# Load news data
-news = pd.read_csv('data/raw/AAPL_news.csv')
+builder = FeatureBuilder()
+prices = pd.read_csv('data/raw/AAPL_prices.csv')
+sentiment = pd.read_csv('data/processed/daily_sentiment.csv')
 
-# Analyze with VADER (fast, no GPU)
-analyzer = VaderAnalyzer()
-sentiment = analyzer.analyze_batch(news, text_column='headline')
+# Build all features
+features = builder.build_features(prices, sentiment, symbol='AAPL')
+print(f"Features: {features.shape}")  # (251, 124) - 124 features
 
-# Or use FinBERT (more accurate, GPU recommended)
-# analyzer = FinBertAnalyzer()
-# sentiment = analyzer.analyze_batch(news, text_column='headline')
-
-# Aggregate to daily signals
-agg = SentimentAggregator()
-daily = agg.aggregate_daily(sentiment)
-signals = agg.generate_signals(daily, method='zscore')
-
-print(signals[['symbol', 'date', 'sentiment_score', 'signal']])
+# Create ML dataset
+X, y = builder.create_ml_dataset(features, prices, target_horizon=1)
+print(f"Training samples: {len(X)}")  # 188 samples after dropping NaN
 ```
 
 ---
 
-## Phase 4: Risk Metrics 🔜 **NEXT**
-
-### Priority: HIGH
-
-Risk metrics are essential for combining with sentiment signals to build a robust trading strategy.
-
-### To Implement
-
-| File | Purpose | Priority |
-|------|---------|----------|
-| `src/risk/var.py` | Value at Risk (Historical, Parametric, Monte Carlo) | **High** |
-| `src/risk/volatility.py` | GARCH volatility forecasting | **High** |
-| `src/risk/drawdown.py` | Drawdown analysis (max DD, recovery time) | Medium |
-| `src/risk/risk_report.py` | Consolidated risk reporting | Medium |
-
-### VaR Implementation Plan
-
-```python
-class VaRCalculator:
-    def historical_var(returns, confidence=0.95)
-    def parametric_var(returns, confidence=0.95)  # Gaussian assumption
-    def monte_carlo_var(returns, confidence=0.95, simulations=10000)
-    def expected_shortfall(returns, confidence=0.95)  # CVaR
-```
-
-### Volatility Implementation Plan
-
-```python
-class VolatilityForecaster:
-    def realized_volatility(returns, window=21)
-    def ewma_volatility(returns, span=21)
-    def garch_forecast(returns, horizon=5)  # Using arch library
-```
-
-### Dependencies Ready
-
-- `scipy` - Statistical distributions for parametric VaR
-- `arch` - GARCH model implementation
-- `numpy` - Monte Carlo simulations
-
----
-
-## Phase 5: Feature Engineering
-
-### To Implement
-
-| File | Purpose | Depends On |
-|------|---------|------------|
-| `src/features/price_features.py` | Returns, momentum, volatility features | Phase 2 |
-| `src/features/sentiment_features.py` | Sentiment lags, momentum, disagreement | Phase 3 |
-| `src/features/risk_features.py` | VaR, volatility regime features | Phase 4 |
-| `src/features/builder.py` | Feature pipeline combining all sources | All above |
-
-### Planned Features
-
-**Price Features:**
-- Returns (1d, 5d, 21d)
-- Momentum indicators (RSI, MACD)
-- Volatility (realized, EWMA)
-- Volume features
-
-**Sentiment Features:**
-- Sentiment score (raw, z-score, percentile rank)
-- Sentiment momentum (change over time)
-- Sentiment disagreement (std of article scores)
-- Bullish/bearish ratio
-- Article count (buzz metric)
-
-**Risk Features:**
-- VaR levels (95%, 99%)
-- Volatility regime (low/medium/high)
-- Drawdown depth and duration
-
----
-
-## Phase 6: ML Models
+## Phase 6: ML Models 🔜 **NEXT**
 
 ### To Implement
 
@@ -267,17 +283,6 @@ class VolatilityForecaster:
 | `src/db/connection.py` | SQLite connection management |
 | `src/db/queries.py` | CRUD operations and aggregation queries |
 
-### Schema Design
-
-```sql
--- Core tables
-news (id, symbol, datetime, headline, summary, source, url)
-prices (id, symbol, date, open, high, low, close, volume)
-sentiment (id, news_id, score, confidence, model, signal)
-daily_sentiment (id, symbol, date, score, article_count, signal_valid)
-signals (id, symbol, date, signal, strength, features_json)
-```
-
 ---
 
 ## Phase 8: Dashboard
@@ -292,58 +297,6 @@ signals (id, symbol, date, signal, strength, features_json)
 | `dashboard/pages/signals.py` | Trading signals view |
 | `dashboard/pages/backtest.py` | Backtesting view |
 
-### Dashboard Features
-
-1. **Sentiment View:** Daily sentiment heatmap, top headlines, symbol comparison
-2. **Risk View:** VaR charts, volatility forecasts, drawdown analysis
-3. **Signals View:** Current signals, historical accuracy, feature importance
-4. **Backtest View:** Strategy performance, benchmark comparison
-
----
-
-## Immediate Next Steps
-
-### 1. Implement Risk Metrics (Phase 4)
-
-```bash
-# Files to create:
-src/risk/var.py
-src/risk/volatility.py
-src/risk/drawdown.py
-tests/test_risk.py
-```
-
-### 2. Test Commands
-
-```bash
-# After implementing Phase 4:
-pytest tests/test_risk.py -v
-
-# Quick verification:
-python -c "
-from src.risk import VaRCalculator, VolatilityForecaster
-import pandas as pd
-
-prices = pd.read_csv('data/raw/AAPL_prices.csv')
-returns = prices['close'].pct_change().dropna()
-
-var = VaRCalculator()
-print(f'95% VaR: {var.historical_var(returns, 0.95):.4f}')
-print(f'99% VaR: {var.historical_var(returns, 0.99):.4f}')
-"
-```
-
-### 3. Integration with Sentiment
-
-After Phase 4, combine risk and sentiment:
-
-```python
-# Merge sentiment signals with risk metrics
-daily_sentiment = pd.read_csv('data/processed/daily_sentiment.csv')
-# Add VaR, volatility columns
-# Create risk-adjusted sentiment signals
-```
-
 ---
 
 ## Running Tests
@@ -354,7 +307,8 @@ source .venv/bin/activate
 pytest tests/ -v
 
 # Run specific module tests
-pytest tests/test_sentiment.py -v
+pytest tests/test_features.py -v
+pytest tests/test_risk.py -v
 
 # Run with coverage
 pytest tests/ --cov=src --cov-report=html
@@ -365,9 +319,10 @@ pytest tests/ --cov=src --cov-report=html
 | Module | Tests | Status |
 |--------|-------|--------|
 | `test_data.py` | Data collection | ✅ Passing |
-| `test_sentiment.py` | Sentiment analysis | ✅ 37 passing |
-| `test_risk.py` | Risk metrics | 🔜 To implement |
-| `test_features.py` | Feature engineering | 🔜 To implement |
+| `test_sentiment.py` | Sentiment analysis | ✅ 39 passing |
+| `test_risk.py` | Risk metrics | ✅ 46 passing |
+| `test_features.py` | Feature engineering | ✅ 69 passing |
+| **Total** | | **154 tests passing** |
 
 ---
 
@@ -391,6 +346,9 @@ pytest tests/ --cov=src --cov-report=html
 │  │             │────▶│  volatility │────▶│             │                    │
 │  │             │     │  drawdown   │     │             │                    │
 │  │             │     │             │     │             │                    │
+│  │             │     │  features   │     │             │                    │
+│  │             │────▶│  builder    │────▶│             │                    │
+│  │             │     │             │     │             │                    │
 │  └─────────────┘     └─────────────┘     └─────────────┘                    │
 │        │                   │                   │                             │
 │        ▼                   ▼                   ▼                             │
@@ -401,5 +359,5 @@ pytest tests/ --cov=src --cov-report=html
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-Status: ████████░░░░░░░░ 50% Complete (Phases 1-3 of 8)
+Status: ██████████░░░░░░ 62.5% Complete (Phases 1-5 of 8)
 ```

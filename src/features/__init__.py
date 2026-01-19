@@ -4,8 +4,18 @@ Feature engineering module.
 Provides:
 - Technical indicators
 - Sentiment-based features
-- Time-series features
-- Feature aggregation and selection
+- Risk-based features
+- Feature aggregation and pipeline
 """
 
-__all__ = []
+from .price_features import PriceFeatureBuilder
+from .sentiment_features import SentimentFeatureBuilder
+from .risk_features import RiskFeatureBuilder
+from .builder import FeatureBuilder
+
+__all__ = [
+    "PriceFeatureBuilder",
+    "SentimentFeatureBuilder",
+    "RiskFeatureBuilder",
+    "FeatureBuilder",
+]

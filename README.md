@@ -135,16 +135,16 @@ Key settings in `config.py`:
 
 ## Development Status
 
-**Current Progress: 50% Complete (Phases 1-3 of 8)**
+**Current Progress: 62.5% Complete (Phases 1-5 of 8)**
 
 | Phase | Status | Description |
 |-------|--------|-------------|
 | 1. Foundation | ✅ Complete | Project structure, config, dependencies |
 | 2. Data Collection | ✅ Complete | 1,731 news articles + 1yr prices for 7 symbols |
 | 3. Sentiment Analysis | ✅ Complete | FinBERT + VADER analyzers, daily aggregation |
-| 4. Risk Metrics | 🔜 Next | VaR, volatility forecasting, drawdown |
-| 5. Feature Engineering | ⏳ Planned | Price, sentiment, risk features |
-| 6. ML Models | ⏳ Planned | XGBoost signal classification |
+| 4. Risk Metrics | ✅ Complete | VaR (3 methods), GARCH volatility, drawdown analysis |
+| 5. Feature Engineering | ✅ Complete | 100+ features from price, sentiment, and risk data |
+| 6. ML Models | 🔜 Next | XGBoost signal classification |
 | 7. Database | ⏳ Planned | SQLite persistence |
 | 8. Dashboard | ⏳ Planned | Streamlit visualization |
 
