@@ -2,9 +2,9 @@
 
 This document tracks the implementation status of the Market Sentiment & Risk Analytics Engine.
 
-## Current Status: Feature Engineering Complete
+## Current Status: ML Models Complete
 
-**Last Updated:** January 19, 2026
+**Last Updated:** January 20, 2026
 
 ---
 
@@ -249,53 +249,211 @@ print(f"Training samples: {len(X)}")  # 188 samples after dropping NaN
 
 ---
 
-## Phase 6: ML Models 🔜 **NEXT**
+## Phase 6: ML Models ✅
 
-### To Implement
+### Completed Tasks
 
-| File | Purpose |
-|------|---------|
-| `src/ml/model.py` | XGBoost classifier for direction, regressor for returns |
-| `src/ml/validation.py` | Time-series cross-validation (walk-forward) |
-| `src/ml/predictions.py` | Signal generation with confidence scores |
+| File | Lines | Description |
+|------|-------|-------------|
+| `src/ml/model.py` | 804 | XGBoost classifier/regressor with feature importance |
+| `src/ml/validation.py` | 568 | Walk-forward cross-validation, purged splits |
+| `src/ml/predictions.py` | 595 | Signal generation with confidence scores |
+| `src/ml/__init__.py` | 63 | Module exports |
+| `tests/test_ml.py` | 961 | 64 tests passing |
 
-### Model Strategy
+### Features Implemented
 
-1. **Classification:** Predict next-day direction (up/down/neutral)
-2. **Regression:** Predict next-day returns
-3. **Ensemble:** Combine both for final signal
+**DirectionClassifier:**
+- XGBoost binary classifier for up/down prediction
+- Automatic class weight balancing
+- Probability predictions with `predict_proba()`
+- Confidence scores for each prediction
+- Feature importance analysis (gain, weight, cover)
+- Model persistence with joblib (save/load)
 
-### Validation Approach
+**ReturnRegressor:**
+- XGBoost regressor for return forecasting
+- Direction accuracy tracking (sign correctness)
+- Confidence estimation based on prediction magnitude
+- MSE, RMSE, MAE, R² evaluation metrics
 
-- Walk-forward validation (no lookahead bias)
-- Purged cross-validation for time series
-- Out-of-sample backtesting
+**EnsembleModel:**
+- Combines classifier and regressor
+- Unified prediction interface
+- Combined signal generation (direction × probability × magnitude)
+
+**TimeSeriesSplit:**
+- Expanding window: Train on all historical data
+- Sliding window: Fixed-size recent window
+- Configurable gap between train/test (avoid leakage)
+- Minimum training size enforcement
+
+**PurgedTimeSeriesSplit:**
+- Purge period to remove overlapping data
+- Embargo period after test set
+- Prevents lookahead bias from feature calculation
+
+**WalkForwardValidator:**
+- Complete validation pipeline
+- Per-fold and aggregate metrics
+- `cross_validate()` convenience function
+- `compare_models()` for model selection
+
+**SignalGenerator:**
+- Converts predictions to trading signals
+- Confidence threshold filtering
+- Neutral zone around 50% probability
+- Strength calculation combining probability and expected return
+
+**PredictionPipeline:**
+- End-to-end prediction workflow
+- Single symbol and batch predictions
+- Latest signal generation for live trading
+- Load from saved models
+
+### Usage Example
+
+```python
+from src.ml import DirectionClassifier, WalkForwardValidator, PredictionPipeline
+from src.features import FeatureBuilder
+import pandas as pd
+
+# Build features
+builder = FeatureBuilder()
+prices = pd.read_csv('data/raw/AAPL_prices.csv')
+features = builder.build_features(prices, symbol='AAPL', include_sentiment=False)
+X, y = builder.create_ml_dataset(features, prices, target_horizon=1, target_type='direction')
+
+# Walk-forward validation
+validator = WalkForwardValidator(
+    model_class=DirectionClassifier,
+    model_params={'n_estimators': 100, 'max_depth': 4},
+    n_splits=5,
+    test_size=25
+)
+results = validator.validate(X, y)
+print(f"CV Accuracy: {results.aggregate_metrics['accuracy_mean']:.1%}")
+
+# Train final model and generate signals
+clf = DirectionClassifier(params={'n_estimators': 100, 'max_depth': 4})
+clf.fit(X, y)
+
+pipeline = PredictionPipeline(classifier=clf)
+signals = pipeline.predict(X, symbol='AAPL')
+print(f"Bullish signals: {len(signals.get_bullish())}")
+print(f"High confidence: {len(signals.filter_by_confidence(0.6))}")
+
+# Save model for later use
+clf.save('data/models/aapl_classifier')
+```
+
+### Model Performance (AAPL)
+
+```
+Walk-Forward Cross-Validation (4 folds):
+   Accuracy:  48.8% ± 9.8%
+   AUC:       50.2% ± 12.7%
+
+Top Predictive Features:
+   1. ma_diff         4.7%
+   2. volatility_63   3.3%
+   3. macd            3.2%
+   4. volatility_10   3.1%
+   5. var_95_63       3.0%
+```
+
+### Output Files
+
+```
+data/processed/
+└── ml_results_visualization.png   # Model performance charts
+```
 
 ---
 
-## Phase 7: Database
+## Phase 7: Database 🔜 **NEXT**
 
 ### To Implement
 
 | File | Purpose |
 |------|---------|
-| `src/db/models.py` | SQLAlchemy models for news, prices, sentiment, signals |
-| `src/db/connection.py` | SQLite connection management |
+| `src/db/models.py` | SQLAlchemy ORM models for all data types |
+| `src/db/connection.py` | SQLite connection management, session handling |
 | `src/db/queries.py` | CRUD operations and aggregation queries |
 
+### Database Schema (Planned)
+
+```sql
+-- Core tables
+news           (id, symbol, headline, summary, datetime, source, url)
+prices         (id, symbol, date, open, high, low, close, volume)
+sentiment      (id, news_id, symbol, score, label, confidence, model)
+features       (id, symbol, date, feature_json)  -- JSON blob for flexibility
+
+-- Derived tables
+signals        (id, symbol, date, direction, confidence, model_version)
+predictions    (id, symbol, date, predicted_return, actual_return)
+backtest_runs  (id, strategy, start_date, end_date, metrics_json)
+```
+
+### Implementation Plan
+
+1. Define SQLAlchemy models with relationships
+2. Create database initialization script
+3. Implement upsert logic (update or insert)
+4. Add query functions for common operations:
+   - Get latest N days of data
+   - Aggregate sentiment by symbol/date
+   - Filter signals by confidence threshold
+   - Retrieve backtest results
+
 ---
 
-## Phase 8: Dashboard
+## Phase 8: Dashboard ⏳ **PLANNED**
 
 ### To Implement
 
 | File | Purpose |
 |------|---------|
-| `dashboard/app.py` | Main Streamlit app |
-| `dashboard/pages/sentiment.py` | Sentiment analysis view |
-| `dashboard/pages/risk.py` | Risk metrics view |
-| `dashboard/pages/signals.py` | Trading signals view |
-| `dashboard/pages/backtest.py` | Backtesting view |
+| `dashboard/app.py` | Main Streamlit entry point |
+| `dashboard/pages/overview.py` | Portfolio overview and summary |
+| `dashboard/pages/sentiment.py` | Sentiment analysis visualization |
+| `dashboard/pages/risk.py` | Risk metrics and VaR charts |
+| `dashboard/pages/signals.py` | Trading signals and predictions |
+| `dashboard/pages/backtest.py` | Strategy backtesting interface |
+| `dashboard/components/charts.py` | Reusable Plotly chart components |
+| `dashboard/components/tables.py` | Data table components |
+
+### Dashboard Features (Planned)
+
+**Overview Page:**
+- Portfolio summary cards (return, risk, Sharpe)
+- Watchlist with latest prices and signals
+- News feed with sentiment indicators
+
+**Sentiment Page:**
+- Time series of sentiment scores
+- Sentiment distribution by source
+- Word cloud of common terms
+- Correlation with price movements
+
+**Risk Page:**
+- VaR gauge and historical chart
+- Volatility term structure
+- Drawdown underwater chart
+- Risk regime indicator
+
+**Signals Page:**
+- Current signals table with confidence
+- Historical signal accuracy
+- Feature importance chart
+- Model prediction distribution
+
+**Backtest Page:**
+- Strategy configuration form
+- Equity curve with benchmark
+- Performance metrics table
+- Trade log with P&L
 
 ---
 
@@ -307,6 +465,7 @@ source .venv/bin/activate
 pytest tests/ -v
 
 # Run specific module tests
+pytest tests/test_ml.py -v
 pytest tests/test_features.py -v
 pytest tests/test_risk.py -v
 
@@ -322,7 +481,8 @@ pytest tests/ --cov=src --cov-report=html
 | `test_sentiment.py` | Sentiment analysis | ✅ 39 passing |
 | `test_risk.py` | Risk metrics | ✅ 46 passing |
 | `test_features.py` | Feature engineering | ✅ 69 passing |
-| **Total** | | **154 tests passing** |
+| `test_ml.py` | ML models | ✅ 64 passing |
+| **Total** | | **270 tests passing** |
 
 ---
 
@@ -338,9 +498,9 @@ pytest tests/ --cov=src --cov-report=html
 │  │             │     │   Layer     │     │   Layer     │                    │
 │  ├─────────────┤     ├─────────────┤     ├─────────────┤                    │
 │  │             │     │             │     │             │                    │
-│  │ news_client │────▶│  finbert    │     │   model     │                    │
-│  │ price_client│     │  vader      │────▶│ predictions │────▶ Dashboard     │
-│  │ watchlist   │────▶│  aggregator │     │ validation  │                    │
+│  │ news_client │────▶│  finbert    │     │   model  ✅ │                    │
+│  │ price_client│     │  vader      │────▶│ validation✅│────▶ Dashboard     │
+│  │ watchlist   │────▶│  aggregator │     │ predictions✅│                   │
 │  │             │     │             │     │             │                    │
 │  │             │     │  var        │     │             │                    │
 │  │             │────▶│  volatility │────▶│             │                    │
@@ -359,5 +519,21 @@ pytest tests/ --cov=src --cov-report=html
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-Status: ██████████░░░░░░ 62.5% Complete (Phases 1-5 of 8)
+Status: ████████████░░░░ 75% Complete (Phases 1-6 of 8)
 ```
+
+---
+
+## Next Steps
+
+### Immediate (Phase 7: Database)
+1. Create SQLAlchemy models for all data types
+2. Implement connection manager with context handling
+3. Build CRUD operations for each table
+4. Add migration support for schema changes
+
+### Upcoming (Phase 8: Dashboard)
+1. Set up Streamlit app structure
+2. Build overview page with key metrics
+3. Add interactive charts with Plotly
+4. Implement filtering and date range selection
