@@ -1,217 +1,160 @@
-# Market Sentiment & Risk Analytics Engine
+# Market Sentiment & Risk Analytics
 
-A comprehensive financial analytics platform that combines sentiment analysis, risk metrics, and machine learning to generate actionable trading signals.
+A financial analytics platform that combines NLP-based sentiment analysis, quantitative risk metrics, and machine learning to generate trading signals. Built with Python, deployed on Streamlit Cloud.
 
-## Overview
+**Live Demo:** [View Dashboard](https://hussain0327-market-sentiment-risk-analytics.streamlit.app)
+
+## What It Does
+
+The system processes financial news through FinBERT sentiment models, calculates risk metrics (VaR, volatility forecasting, drawdown analysis), engineers 100+ features, and trains XGBoost models to predict market direction. Everything feeds into an interactive dashboard.
 
 ```
-┌─────────────────────┐
-│   Risk Analytics    │
-│  - VaR (3 methods)  │
-│  - Volatility fcst  │
-│  - Drawdown metrics │
-└──────────┬──────────┘
-           │
-[Finnhub API] → [Sentiment Model] → [Feature Engineering] → [ML Signal Model] → [Dashboard]
-           │
-┌──────────┴──────────┐
-│     Price Data      │
-│  - Returns/Volume   │
-│  - Technicals       │
-└─────────────────────┘
+News Data (Finnhub) --> Sentiment Analysis (FinBERT) --\
+                                                        --> Feature Engineering --> ML Models --> Dashboard
+Price Data (yfinance) --> Risk Metrics (VaR, GARCH) --/
 ```
-
-## Features
-
-| Component | Tools | Purpose |
-|-----------|-------|---------|
-| **Sentiment Analysis** | FinBERT, VADER | Extract market sentiment from financial news |
-| **VaR Calculation** | numpy, scipy | Measure portfolio risk exposure |
-| **Volatility Forecasting** | GARCH (arch) | Model time-varying risk |
-| **Feature Engineering** | pandas | Prepare data for ML models |
-| **ML Models** | XGBoost | Direction prediction & signal generation |
-| **Backtesting** | vectorbt | Validate strategies out-of-sample |
-| **Dashboard** | Streamlit, Plotly | Interactive visualization |
 
 ## Tech Stack
 
-- **Data Sources:** Finnhub API (news), yfinance (prices)
-- **Database:** SQLite with SQLAlchemy
-- **Sentiment:** FinBERT (primary), VADER (fallback)
-- **Risk:** numpy, scipy, arch (GARCH)
-- **ML:** XGBoost, scikit-learn
-- **Dashboard:** Streamlit, Plotly
+| Layer | Technology |
+|-------|------------|
+| Data Sources | Finnhub API, yfinance |
+| Sentiment | FinBERT (HuggingFace), VADER |
+| Risk | NumPy, SciPy, arch (GARCH) |
+| ML | XGBoost, scikit-learn |
+| Backend | FastAPI, SQLAlchemy |
+| Frontend | Streamlit, Plotly |
+| Deployment | Streamlit Cloud, GitHub Releases |
+
+## Features
+
+**Sentiment Analysis**
+- FinBERT transformer model for financial text
+- VADER as lightweight fallback
+- Daily aggregation with z-score signal generation
+
+**Risk Metrics**
+- Value at Risk (Historical, Parametric, Monte Carlo)
+- GARCH(1,1) volatility forecasting
+- Maximum drawdown and recovery analysis
+
+**ML Pipeline**
+- 100+ engineered features (technical, sentiment, risk)
+- XGBoost direction classifier and return regressor
+- Walk-forward validation to prevent lookahead bias
+
+**Dashboard**
+- Overview with portfolio summary
+- Sentiment trends and news analysis
+- Risk metrics visualization
+- ML predictions with confidence scores
+- Backtesting interface
 
 ## Project Structure
 
 ```
 Market-Sentiment-Risk-Analytics/
-├── config.py                 # Configuration management
-├── requirements.txt          # Python dependencies
-├── src/
-│   ├── data/                 # Data collection (Finnhub, yfinance)
-│   ├── sentiment/            # FinBERT & VADER analysis
-│   ├── risk/                 # VaR, volatility, drawdown
-│   ├── features/             # Feature engineering (100+ features)
-│   ├── ml/                   # XGBoost models & signal generation
-│   └── db/                   # SQLite database operations
+├── api/                      # FastAPI backend
+│   ├── main.py
+│   └── routes/               # REST endpoints
 ├── dashboard/
 │   ├── app.py                # Streamlit entry point
-│   ├── components/           # Reusable UI components
-│   └── pages/                # Dashboard pages
-├── notebooks/                # Jupyter notebooks for EDA
-├── scripts/                  # Pipeline scripts
-├── tests/                    # Test suite (270 tests)
-└── docs/                     # Documentation
+│   ├── views/                # Dashboard pages
+│   ├── components/           # Reusable charts/tables
+│   ├── data_loader.py        # Data access layer
+│   └── remote_loader.py      # GitHub Releases model loader
+├── src/
+│   ├── data/                 # Data collection
+│   ├── sentiment/            # FinBERT & VADER
+│   ├── risk/                 # VaR, volatility, drawdown
+│   ├── features/             # Feature engineering
+│   ├── ml/                   # XGBoost models
+│   └── db/                   # Database operations
+├── scripts/
+│   ├── train_models.py       # Model training pipeline
+│   └── upload_models.py      # Deploy models to GitHub Releases
+├── data/
+│   ├── raw/                  # Price and news CSVs
+│   ├── processed/            # Sentiment scores, signals
+│   └── models/               # Trained model files
+└── tests/                    # Test suite
 ```
 
-## Quick Start
+## Setup
 
-### 1. Clone and Setup Environment
+### Prerequisites
+
+- Python 3.10+
+- Finnhub API key (free at finnhub.io)
+
+### Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Hussain0327/Market-Sentiment-Risk-Analytics.git
 cd Market-Sentiment-Risk-Analytics
 
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
-```
 
-### 2. Configure API Keys
-
-```bash
 cp .env.example .env
-# Edit .env and add your Finnhub API key
+# Add your FINNHUB_API_KEY to .env
 ```
 
-Get a free API key at: https://finnhub.io/register
-
-### 3. Verify Installation
+### Run Locally
 
 ```bash
-python -c "from config import Config; print(Config.PROJECT_ROOT)"
-python -c "from src import data, sentiment, risk, features, ml, db"
-```
-
-### 4. Run Sentiment Analysis
-
-```python
-from src.sentiment import VaderAnalyzer, SentimentAggregator
-import pandas as pd
-
-# Load news data
-news = pd.read_csv('data/raw/AAPL_news.csv')
-
-# Analyze sentiment
-analyzer = VaderAnalyzer()
-sentiment = analyzer.analyze_batch(news, text_column='headline')
-
-# Aggregate to daily signals
-agg = SentimentAggregator()
-daily = agg.aggregate_daily(sentiment)
-signals = agg.generate_signals(daily, method='zscore')
-
-print(signals[['symbol', 'date', 'sentiment_score', 'signal']])
-```
-
-### 5. Train ML Model and Generate Signals
-
-```python
-from src.features import FeatureBuilder
-from src.ml import DirectionClassifier, WalkForwardValidator, PredictionPipeline
-import pandas as pd
-
-# Build features
-builder = FeatureBuilder()
-prices = pd.read_csv('data/raw/AAPL_prices.csv')
-features = builder.build_features(prices, symbol='AAPL', include_sentiment=False)
-X, y = builder.create_ml_dataset(features, prices, target_horizon=1, target_type='direction')
-
-# Walk-forward validation (no lookahead bias)
-validator = WalkForwardValidator(
-    model_class=DirectionClassifier,
-    model_params={'n_estimators': 100, 'max_depth': 4},
-    n_splits=5,
-    test_size=25
-)
-results = validator.validate(X, y)
-print(f"CV Accuracy: {results.aggregate_metrics['accuracy_mean']:.1%}")
-
-# Train final model and generate signals
-clf = DirectionClassifier(params={'n_estimators': 100, 'max_depth': 4})
-clf.fit(X, y)
-
-pipeline = PredictionPipeline(classifier=clf)
-signals = pipeline.predict(X, symbol='AAPL')
-print(f"Bullish: {len(signals.get_bullish())}, Bearish: {len(signals.get_bearish())}")
-
-# Get latest signal
-latest = pipeline.predict_latest(X, symbol='AAPL')
-print(f"Latest: {'BULLISH' if latest.is_bullish else 'BEARISH'} ({latest.confidence:.1%} confidence)")
-```
-
-### 6. Run Dashboard (coming soon)
-
-```bash
+# Dashboard
 streamlit run dashboard/app.py
+
+# API server
+uvicorn api.main:app --reload
 ```
+
+### Train Models
+
+```bash
+python scripts/train_models.py
+```
+
+## Deployment
+
+The dashboard is deployed on Streamlit Cloud. Models are stored in GitHub Releases and fetched at runtime, so retraining doesn't require redeployment.
+
+**Update models without redeploying:**
+```bash
+python scripts/train_models.py --retrain
+export GITHUB_TOKEN="your_token"
+python scripts/upload_models.py
+```
+
+The dashboard automatically picks up new models on the next page load.
+
+## API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/prices/{symbol}` | Historical price data |
+| `GET /api/sentiment/{symbol}` | Sentiment scores and signals |
+| `GET /api/risk/{symbol}` | VaR and volatility metrics |
+| `GET /api/predictions/{symbol}` | ML predictions |
+
+Full API docs at `/docs` when running locally.
 
 ## Configuration
 
-Key settings in `config.py`:
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `FINNHUB_API_KEY` | (from .env) | Finnhub API key |
-| `SENTIMENT_MODEL` | ProsusAI/finbert | HuggingFace model for sentiment |
-| `VAR_CONFIDENCE_LEVELS` | [0.95, 0.99] | VaR confidence levels |
-| `LOOKBACK_WINDOWS` | [21, 63, 252] | Trading days for analysis |
-| `DEFAULT_WATCHLIST` | AAPL, MSFT, ... | Default stock symbols |
-
-## Development Status
-
-**Current Progress: 75% Complete (Phases 1-6 of 8)**
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| 1. Foundation | Complete | Project structure, config, dependencies |
-| 2. Data Collection | Complete | 1,731 news articles + 1yr prices for 7 symbols |
-| 3. Sentiment Analysis | Complete | FinBERT + VADER analyzers, daily aggregation |
-| 4. Risk Metrics | Complete | VaR (3 methods), GARCH volatility, drawdown analysis |
-| 5. Feature Engineering | Complete | 100+ features from price, sentiment, and risk data |
-| 6. ML Models | Complete | XGBoost classifier/regressor, walk-forward validation, signal generation |
-| 7. Database | Next | SQLite persistence |
-| 8. Dashboard | Planned | Streamlit visualization |
-
-### Test Coverage
+Environment variables (`.env`):
 
 ```
-270 tests passing across 5 test modules:
-  - test_data.py       (data collection)
-  - test_sentiment.py  (39 tests - sentiment analysis)
-  - test_risk.py       (46 tests - risk metrics)
-  - test_features.py   (69 tests - feature engineering)
-  - test_ml.py         (64 tests - ML models)
+FINNHUB_API_KEY=your_key
+SENTIMENT_MODEL=ProsusAI/finbert
+DATABASE_URL=sqlite:///data/market_sentiment.db
 ```
 
-Run tests with: `pytest tests/ -v`
+## Coverage
 
-See [docs/README.md](docs/README.md) for detailed implementation progress.
-
-## What's Next
-
-### Phase 7: Database (Next)
-- SQLAlchemy ORM models for news, prices, sentiment, signals
-- SQLite connection management
-- CRUD operations and aggregation queries
-
-### Phase 8: Dashboard (Planned)
-- Streamlit multi-page application
-- Interactive Plotly visualizations
-- Real-time signal monitoring
-- Backtesting interface
+7 symbols tracked: AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT
