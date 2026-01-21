@@ -2,7 +2,7 @@
 
 A financial analytics platform that combines NLP-based sentiment analysis, quantitative risk metrics, and machine learning to generate trading signals. Built with Python, deployed on Streamlit Cloud.
 
-**Live Demo:** [View Dashboard](https://hussain0327-market-sentiment-risk-analytics.streamlit.app)
+**Live Demo:** [View Dashboard](https://market-sentiment-risk-analytics.streamlit.app/)
 
 ## What It Does
 
