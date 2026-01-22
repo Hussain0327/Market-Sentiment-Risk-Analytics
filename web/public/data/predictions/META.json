@@ -1,0 +1,43 @@
+{
+  "symbol": "META",
+  "model": {
+    "trained_at": "2026-01-21T16:44:45.398223",
+    "n_samples": 125,
+    "n_features": 80
+  },
+  "classifier": {
+    "auc": 0.6793,
+    "accuracy": 0.5571,
+    "precision": 0.5361,
+    "recall": 0.881,
+    "f1": 0.6529
+  },
+  "regressor": {
+    "r2": -8.4887,
+    "rmse": 0.04694,
+    "mae": 0.039788,
+    "direction_accuracy": 0.5571
+  },
+  "features": [
+    "return_1d",
+    "return_5d",
+    "return_21d",
+    "log_return_1d",
+    "log_return_5d",
+    "log_return_21d",
+    "rsi_14",
+    "macd",
+    "macd_signal",
+    "macd_histogram",
+    "stoch_k",
+    "stoch_d",
+    "volatility_5",
+    "volatility_10",
+    "volatility_21",
+    "volatility_63",
+    "bb_middle",
+    "bb_upper",
+    "bb_lower",
+    "bb_pct_b"
+  ]
+}

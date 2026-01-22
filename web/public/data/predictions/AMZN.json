@@ -1,0 +1,43 @@
+{
+  "symbol": "AMZN",
+  "model": {
+    "trained_at": "2026-01-21T16:44:40.843628",
+    "n_samples": 125,
+    "n_features": 80
+  },
+  "classifier": {
+    "auc": 0.6311,
+    "accuracy": 0.5143,
+    "precision": 0.4857,
+    "recall": 0.3833,
+    "f1": 0.3755
+  },
+  "regressor": {
+    "r2": -0.2099,
+    "rmse": 0.021564,
+    "mae": 0.017418,
+    "direction_accuracy": 0.5286
+  },
+  "features": [
+    "return_1d",
+    "return_5d",
+    "return_21d",
+    "log_return_1d",
+    "log_return_5d",
+    "log_return_21d",
+    "rsi_14",
+    "macd",
+    "macd_signal",
+    "macd_histogram",
+    "stoch_k",
+    "stoch_d",
+    "volatility_5",
+    "volatility_10",
+    "volatility_21",
+    "volatility_63",
+    "bb_middle",
+    "bb_upper",
+    "bb_lower",
+    "bb_pct_b"
+  ]
+}

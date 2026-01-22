@@ -1,0 +1,167 @@
+{
+  "symbol": "AAPL",
+  "metrics": {
+    "volatility_21d": 10.57,
+    "volatility_63d": 16.47,
+    "var_95": -3.17,
+    "var_99": -4.92,
+    "es_95": -4.5,
+    "es_99": -7.17,
+    "max_drawdown": -30.22,
+    "current_drawdown": -10.71,
+    "sharpe_ratio": 1.05,
+    "risk_score": 68.0
+  },
+  "history": [
+    {
+      "date": "2026-01-16",
+      "volatility": 29.38,
+      "drawdown": -10.71
+    },
+    {
+      "date": "2026-01-15",
+      "volatility": 26.46,
+      "drawdown": -9.78
+    },
+    {
+      "date": "2026-01-14",
+      "volatility": 26.54,
+      "drawdown": -9.17
+    },
+    {
+      "date": "2026-01-13",
+      "volatility": 26.48,
+      "drawdown": -8.78
+    },
+    {
+      "date": "2026-01-12",
+      "volatility": 26.35,
+      "drawdown": -9.06
+    },
+    {
+      "date": "2026-01-09",
+      "volatility": 26.73,
+      "drawdown": -9.37
+    },
+    {
+      "date": "2026-01-08",
+      "volatility": 24.1,
+      "drawdown": -9.49
+    },
+    {
+      "date": "2026-01-07",
+      "volatility": 24.96,
+      "drawdown": -9.04
+    },
+    {
+      "date": "2026-01-06",
+      "volatility": 25.46,
+      "drawdown": -8.33
+    },
+    {
+      "date": "2026-01-05",
+      "volatility": 25.55,
+      "drawdown": -6.61
+    },
+    {
+      "date": "2026-01-02",
+      "volatility": 22.37,
+      "drawdown": -5.3
+    },
+    {
+      "date": "2025-12-31",
+      "volatility": 21.26,
+      "drawdown": -5.01
+    },
+    {
+      "date": "2025-12-30",
+      "volatility": 21.88,
+      "drawdown": -4.58
+    },
+    {
+      "date": "2025-12-29",
+      "volatility": 27.87,
+      "drawdown": -4.34
+    },
+    {
+      "date": "2025-12-26",
+      "volatility": 28.47,
+      "drawdown": -4.47
+    },
+    {
+      "date": "2025-12-24",
+      "volatility": 29.0,
+      "drawdown": -4.33
+    },
+    {
+      "date": "2025-12-23",
+      "volatility": 29.58,
+      "drawdown": -4.83
+    },
+    {
+      "date": "2025-12-22",
+      "volatility": 29.58,
+      "drawdown": -5.32
+    },
+    {
+      "date": "2025-12-19",
+      "volatility": 28.36,
+      "drawdown": -4.37
+    },
+    {
+      "date": "2025-12-18",
+      "volatility": 27.56,
+      "drawdown": -4.89
+    },
+    {
+      "date": "2025-12-17",
+      "volatility": 28.24,
+      "drawdown": -5.01
+    },
+    {
+      "date": "2025-12-16",
+      "volatility": 28.11,
+      "drawdown": -4.05
+    },
+    {
+      "date": "2025-12-15",
+      "volatility": 29.31,
+      "drawdown": -4.22
+    },
+    {
+      "date": "2025-12-12",
+      "volatility": 29.85,
+      "drawdown": -2.76
+    },
+    {
+      "date": "2025-12-11",
+      "volatility": 30.3,
+      "drawdown": -2.85
+    },
+    {
+      "date": "2025-12-10",
+      "volatility": 30.31,
+      "drawdown": -2.59
+    },
+    {
+      "date": "2025-12-09",
+      "volatility": 29.66,
+      "drawdown": -3.15
+    },
+    {
+      "date": "2025-12-08",
+      "volatility": 30.59,
+      "drawdown": -2.9
+    },
+    {
+      "date": "2025-12-05",
+      "volatility": 30.62,
+      "drawdown": -2.59
+    },
+    {
+      "date": "2025-12-04",
+      "volatility": 30.44,
+      "drawdown": -1.92
+    }
+  ]
+}

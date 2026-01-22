@@ -1,0 +1,71 @@
+{
+  "symbol": "AMZN",
+  "latest": {
+    "date": "2026-01-18",
+    "score": 0.4345,
+    "confidence": 0.4349,
+    "signal": "bullish",
+    "signal_strength": 0.4906,
+    "article_count": 10,
+    "bullish_ratio": 0.8,
+    "bearish_ratio": 0.0
+  },
+  "history": [
+    {
+      "date": "2026-01-18",
+      "score": 0.4345,
+      "confidence": 0.4349,
+      "signal": "bullish",
+      "signal_strength": 0.4906,
+      "article_count": 10
+    },
+    {
+      "date": "2026-01-17",
+      "score": 0.118,
+      "confidence": 0.3188,
+      "signal": "neutral",
+      "signal_strength": 0.0851,
+      "article_count": 17
+    },
+    {
+      "date": "2026-01-16",
+      "score": 0.2681,
+      "confidence": 0.3448,
+      "signal": "bullish",
+      "signal_strength": 0.5854,
+      "article_count": 53
+    },
+    {
+      "date": "2026-01-15",
+      "score": 0.1411,
+      "confidence": 0.2993,
+      "signal": "neutral",
+      "signal_strength": 0.1976,
+      "article_count": 64
+    },
+    {
+      "date": "2026-01-14",
+      "score": 0.1154,
+      "confidence": 0.323,
+      "signal": "neutral",
+      "signal_strength": 0.0585,
+      "article_count": 58
+    },
+    {
+      "date": "2026-01-13",
+      "score": 0.1092,
+      "confidence": 0.3292,
+      "signal": "neutral",
+      "signal_strength": 0.1268,
+      "article_count": 43
+    },
+    {
+      "date": "2026-01-09",
+      "score": -0.4588,
+      "confidence": 0.4588,
+      "signal": "neutral",
+      "signal_strength": 0.1925,
+      "article_count": 1
+    }
+  ]
+}

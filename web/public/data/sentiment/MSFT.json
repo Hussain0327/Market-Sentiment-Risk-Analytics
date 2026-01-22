@@ -1,0 +1,63 @@
+{
+  "symbol": "MSFT",
+  "latest": {
+    "date": "2026-01-18",
+    "score": 0.3439,
+    "confidence": 0.3434,
+    "signal": "neutral",
+    "signal_strength": 0.2232,
+    "article_count": 13,
+    "bullish_ratio": 0.6923,
+    "bearish_ratio": 0.0769
+  },
+  "history": [
+    {
+      "date": "2026-01-18",
+      "score": 0.3439,
+      "confidence": 0.3434,
+      "signal": "neutral",
+      "signal_strength": 0.2232,
+      "article_count": 13
+    },
+    {
+      "date": "2026-01-17",
+      "score": 0.0725,
+      "confidence": 0.2153,
+      "signal": "bearish",
+      "signal_strength": 0.3713,
+      "article_count": 15
+    },
+    {
+      "date": "2026-01-16",
+      "score": 0.1856,
+      "confidence": 0.3245,
+      "signal": "neutral",
+      "signal_strength": 0.018,
+      "article_count": 51
+    },
+    {
+      "date": "2026-01-15",
+      "score": 0.1927,
+      "confidence": 0.3068,
+      "signal": "neutral",
+      "signal_strength": 0.0524,
+      "article_count": 63
+    },
+    {
+      "date": "2026-01-14",
+      "score": 0.1145,
+      "confidence": 0.336,
+      "signal": "neutral",
+      "signal_strength": 0.0518,
+      "article_count": 54
+    },
+    {
+      "date": "2026-01-13",
+      "score": 0.0831,
+      "confidence": 0.1992,
+      "signal": "neutral",
+      "signal_strength": 0.0199,
+      "article_count": 48
+    }
+  ]
+}

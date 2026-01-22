@@ -1,0 +1,63 @@
+{
+  "symbol": "AAPL",
+  "latest": {
+    "date": "2026-01-18",
+    "score": 0.2513,
+    "confidence": 0.3292,
+    "signal": "neutral",
+    "signal_strength": 0.0502,
+    "article_count": 7,
+    "bullish_ratio": 0.7143,
+    "bearish_ratio": 0.1429
+  },
+  "history": [
+    {
+      "date": "2026-01-18",
+      "score": 0.2513,
+      "confidence": 0.3292,
+      "signal": "neutral",
+      "signal_strength": 0.0502,
+      "article_count": 7
+    },
+    {
+      "date": "2026-01-17",
+      "score": 0.1779,
+      "confidence": 0.1789,
+      "signal": "neutral",
+      "signal_strength": 0.2922,
+      "article_count": 17
+    },
+    {
+      "date": "2026-01-16",
+      "score": 0.151,
+      "confidence": 0.2749,
+      "signal": "neutral",
+      "signal_strength": 0.2195,
+      "article_count": 46
+    },
+    {
+      "date": "2026-01-15",
+      "score": 0.3026,
+      "confidence": 0.4228,
+      "signal": "bullish",
+      "signal_strength": 0.5855,
+      "article_count": 76
+    },
+    {
+      "date": "2026-01-14",
+      "score": 0.1419,
+      "confidence": 0.2955,
+      "signal": "neutral",
+      "signal_strength": 0.2487,
+      "article_count": 58
+    },
+    {
+      "date": "2026-01-13",
+      "score": 0.1948,
+      "confidence": 0.3083,
+      "signal": "bullish",
+      "signal_strength": 0.4775,
+      "article_count": 43
+    }
+  ]
+}

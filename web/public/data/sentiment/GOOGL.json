@@ -1,0 +1,55 @@
+{
+  "symbol": "GOOGL",
+  "latest": {
+    "date": "2026-01-18",
+    "score": 0.2989,
+    "confidence": 0.3676,
+    "signal": "neutral",
+    "signal_strength": 0.0903,
+    "article_count": 20,
+    "bullish_ratio": 0.65,
+    "bearish_ratio": 0.1
+  },
+  "history": [
+    {
+      "date": "2026-01-18",
+      "score": 0.2989,
+      "confidence": 0.3676,
+      "signal": "neutral",
+      "signal_strength": 0.0903,
+      "article_count": 20
+    },
+    {
+      "date": "2026-01-17",
+      "score": 0.1473,
+      "confidence": 0.3189,
+      "signal": "neutral",
+      "signal_strength": 0.0997,
+      "article_count": 26
+    },
+    {
+      "date": "2026-01-16",
+      "score": 0.1761,
+      "confidence": 0.2948,
+      "signal": "neutral",
+      "signal_strength": 0.0471,
+      "article_count": 70
+    },
+    {
+      "date": "2026-01-15",
+      "score": 0.1799,
+      "confidence": 0.2877,
+      "signal": "neutral",
+      "signal_strength": 0.0096,
+      "article_count": 82
+    },
+    {
+      "date": "2026-01-14",
+      "score": 0.1406,
+      "confidence": 0.2644,
+      "signal": "neutral",
+      "signal_strength": 0.2392,
+      "article_count": 50
+    }
+  ]
+}

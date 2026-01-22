@@ -1,0 +1,167 @@
+{
+  "symbol": "AMZN",
+  "metrics": {
+    "volatility_21d": 23.55,
+    "volatility_63d": 32.78,
+    "var_95": -3.05,
+    "var_99": -5.08,
+    "es_95": -4.7,
+    "es_99": -7.47,
+    "max_drawdown": -30.88,
+    "current_drawdown": -5.86,
+    "sharpe_ratio": 0.28,
+    "risk_score": 94.0
+  },
+  "history": [
+    {
+      "date": "2026-01-16",
+      "volatility": 24.41,
+      "drawdown": -5.86
+    },
+    {
+      "date": "2026-01-15",
+      "volatility": 23.83,
+      "drawdown": -6.23
+    },
+    {
+      "date": "2026-01-14",
+      "volatility": 24.36,
+      "drawdown": -6.83
+    },
+    {
+      "date": "2026-01-13",
+      "volatility": 24.75,
+      "drawdown": -4.49
+    },
+    {
+      "date": "2026-01-12",
+      "volatility": 24.8,
+      "drawdown": -2.96
+    },
+    {
+      "date": "2026-01-09",
+      "volatility": 25.03,
+      "drawdown": -2.61
+    },
+    {
+      "date": "2026-01-08",
+      "volatility": 25.42,
+      "drawdown": -3.04
+    },
+    {
+      "date": "2026-01-07",
+      "volatility": 26.65,
+      "drawdown": -4.9
+    },
+    {
+      "date": "2026-01-06",
+      "volatility": 28.46,
+      "drawdown": -5.15
+    },
+    {
+      "date": "2026-01-05",
+      "volatility": 27.59,
+      "drawdown": -8.24
+    },
+    {
+      "date": "2026-01-02",
+      "volatility": 29.38,
+      "drawdown": -10.83
+    },
+    {
+      "date": "2025-12-31",
+      "volatility": 29.68,
+      "drawdown": -9.13
+    },
+    {
+      "date": "2025-12-30",
+      "volatility": 29.13,
+      "drawdown": -8.45
+    },
+    {
+      "date": "2025-12-29",
+      "volatility": 28.74,
+      "drawdown": -8.63
+    },
+    {
+      "date": "2025-12-26",
+      "volatility": 27.22,
+      "drawdown": -8.46
+    },
+    {
+      "date": "2025-12-24",
+      "volatility": 26.63,
+      "drawdown": -8.51
+    },
+    {
+      "date": "2025-12-23",
+      "volatility": 27.23,
+      "drawdown": -8.61
+    },
+    {
+      "date": "2025-12-22",
+      "volatility": 28.89,
+      "drawdown": -10.07
+    },
+    {
+      "date": "2025-12-19",
+      "volatility": 28.52,
+      "drawdown": -10.49
+    },
+    {
+      "date": "2025-12-18",
+      "volatility": 28.64,
+      "drawdown": -10.72
+    },
+    {
+      "date": "2025-12-17",
+      "volatility": 29.63,
+      "drawdown": -12.89
+    },
+    {
+      "date": "2025-12-16",
+      "volatility": 29.56,
+      "drawdown": -12.38
+    },
+    {
+      "date": "2025-12-15",
+      "volatility": 29.7,
+      "drawdown": -12.39
+    },
+    {
+      "date": "2025-12-12",
+      "volatility": 31.85,
+      "drawdown": -10.95
+    },
+    {
+      "date": "2025-12-11",
+      "volatility": 31.76,
+      "drawdown": -9.34
+    },
+    {
+      "date": "2025-12-10",
+      "volatility": 32.56,
+      "drawdown": -8.75
+    },
+    {
+      "date": "2025-12-09",
+      "volatility": 32.39,
+      "drawdown": -10.27
+    },
+    {
+      "date": "2025-12-08",
+      "volatility": 34.37,
+      "drawdown": -10.67
+    },
+    {
+      "date": "2025-12-05",
+      "volatility": 33.67,
+      "drawdown": -9.63
+    },
+    {
+      "date": "2025-12-04",
+      "volatility": 32.3,
+      "drawdown": -9.8
+    }
+  ]
+}

@@ -98,6 +98,11 @@ firebase-debug.log
 # Streamlit
 .streamlit/secrets.toml
 
+# Next.js / Node
+web/node_modules/
+web/.next/
+web/out/
+
 # Temporary files
 *.tmp
 *.temp
