@@ -31,7 +31,7 @@
 | Platform | URL | Description |
 |----------|-----|-------------|
 | **Next.js Dashboard** | [web-iota-three-51.vercel.app](https://web-iota-three-51.vercel.app) | Fast, modern dashboard with instant loads |
-| **Streamlit App** | [streamlit.app](https://hussain0327-market-sentiment-risk-analytics.streamlit.app) | Interactive Python dashboard |
+| **Streamlit App** | [streamlit.app](https://market-sentiment-risk-analytics.streamlit.app/) | Interactive Python dashboard |
 
 ---
 
